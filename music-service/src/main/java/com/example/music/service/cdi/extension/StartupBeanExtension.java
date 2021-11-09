@@ -1,39 +1,40 @@
 package com.example.music.service.cdi.extension;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-//TODO: CDI Portable Extensions should implement the javax.enterprise.inject.spi.Extension interface
-public class StartupBeanExtension {
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterDeploymentValidation;
+import javax.enterprise.inject.spi.Annotated;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.ProcessBean;
 
-    private static final Logger LOGGER = Logger.getLogger(StartupBeanExtension.class.getName());
+public class StartupBeanExtension implements javax.enterprise.inject.spi.Extension {
 
-    private final Set<Bean<?>> startupBeans = new LinkedHashSet<>();
+	private static final Logger LOGGER = Logger.getLogger(StartupBeanExtension.class.getName());
 
-    //TODO: Should @Observes ProcessBean event
-    <X> void processBean(ProcessBean<X> event) {
-        Annotated annotated = event.getAnnotated();
-        if (isStartUpBean(annotated)) {
-            LOGGER.info("New StartUp class found: " + event.getBean());
-            startupBeans.add(event.getBean());
-        }
-    }
+	private final Set<Bean<?>> startupBeans = new LinkedHashSet<>();
 
-    private boolean isStartUpBean(Annotated annotated) {
-        return annotated.isAnnotationPresent(StartUp.class)
-                && annotated.isAnnotationPresent(ApplicationScoped.class);
-    }
+	<X> void processBean(@Observes ProcessBean<X> event) {
+		Annotated annotated = event.getAnnotated();
+		if (isStartUpBean(annotated)) {
+			LOGGER.info("New StartUp class found: " + event.getBean());
+			startupBeans.add(event.getBean());
+		}
+	}
 
-    //TODO: Should @Observes AfterDeploymentValidation event
-    void afterDeploymentValidation(AfterDeploymentValidation event, BeanManager manager) {
-        LOGGER.info("Number of StartUp classes: " + startupBeans.size());
-        for (Bean<?> bean : startupBeans) {
-            // the call to toString() is a cheat to force the bean to be initialized
-            manager.getReference(bean, bean.getBeanClass(), manager.createCreationalContext(bean)).toString();
-        }
-    }
+	private boolean isStartUpBean(Annotated annotated) {
+		return annotated.isAnnotationPresent(StartUp.class) && annotated.isAnnotationPresent(ApplicationScoped.class);
+	}
+
+	void afterDeploymentValidation(@Observes AfterDeploymentValidation event, BeanManager manager) {
+		LOGGER.info("Number of StartUp classes: " + startupBeans.size());
+		for (Bean<?> bean : startupBeans) {
+			// the call to toString() is a cheat to force the bean to be initialized
+			manager.getReference(bean, bean.getBeanClass(), manager.createCreationalContext(bean)).toString();
+		}
+	}
 }

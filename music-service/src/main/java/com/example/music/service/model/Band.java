@@ -1,6 +1,5 @@
 package com.example.music.service.model;
 
-import java.util.List;
 import java.util.Set;
 
 public class Band {
@@ -19,7 +18,15 @@ public class Band {
     public static Band of(String band, String genre, Set<String> albums) {
         return new Band(band,genre,albums);
     }
+    
+    public String getBandName() {
+    	return bandName;
+    }
 
+    public Set<String> getAlbums() {
+    	return albums;
+    }
+    
     @Override
     public String toString() {
         return "Band{" +
@@ -28,4 +35,5 @@ public class Band {
                 ", albums=" + albums +
                 '}';
     }
+
 }
