@@ -1,11 +1,5 @@
 package my.company.cdi.demo.load;
 
-import com.github.javafaker.DragonBall;
-import com.github.javafaker.Faker;
-import my.company.cdi.demo.extension.StartUp;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,9 +7,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+
+import com.github.javafaker.DragonBall;
+import com.github.javafaker.Faker;
+
+import my.company.cdi.demo.extension.StartUp;
+
 // TODO Annotate this bean with ApplicationScoped and StartUp
 
-
+@ApplicationScoped
+@StartUp
 public class NameLoaderStartup implements Supplier<Set<String>> {
 
     private static final Logger LOGGER = Logger.getLogger(NameLoaderStartup.class.getName());

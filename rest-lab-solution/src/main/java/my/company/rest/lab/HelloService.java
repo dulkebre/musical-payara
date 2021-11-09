@@ -1,14 +1,12 @@
 package my.company.rest.lab;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @Singleton
 public class HelloService {
